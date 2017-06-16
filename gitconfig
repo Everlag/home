@@ -1,0 +1,6 @@
+[user]
+        email = boutette@google.com
+[core]
+        editor = nano
+[alias]
+	diffc = diff --cached
