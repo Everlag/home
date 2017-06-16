@@ -2,5 +2,6 @@
         email = boutette@google.com
 [core]
         editor = nano
+	pager = less --tabs=4 -RFX
 [alias]
 	diffc = diff --cached
