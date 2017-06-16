@@ -49,4 +49,6 @@ fi
 #   github.com/rileykarson/config
 source ~/git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=true
+GIT_PS1_SHOWUNTRACKEDFILES=1
+GIT_PS1_SHOWCOLORHINTS=1
 PS1='\[\e]0;|\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]$(__git_ps1 " (%s)")\n\$ '

@@ -1,0 +1,2 @@
+ln -s bashrc ~/.bashrc
+ln -s profile ~/.profile
