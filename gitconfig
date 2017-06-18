@@ -1,5 +1,6 @@
 [user]
         email = boutette@google.com
+	name = Kyle Boutette
 [core]
         editor = nano
 	pager = less --tabs=4 -RFX
