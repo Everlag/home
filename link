@@ -1,2 +1,3 @@
-ln -s bashrc ~/.bashrc
-ln -s profile ~/.profile
+ln -s `pwd`/bashrc ~/.bashrc
+ln -s `pwd`/profile ~/.profile
+ln -s `pwd`/git-prompt ~/.git-prompt.sh
