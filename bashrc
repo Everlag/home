@@ -43,6 +43,14 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Keep an ssh agent running
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+  eval `ssh-agent`
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+ssh-add -l | grep "The agent has no identities" && ssh-add
+
 # Change prompt to be good
 # This combines Riley's cygwin-style with Joe's git helper
 #   github.com/selmanj/home
