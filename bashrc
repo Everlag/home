@@ -22,7 +22,11 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias ls='ls -CF'
+
+# Better pager
 alias less='less -RFX'
+
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -44,11 +48,19 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Keep an ssh agent running
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+  eval `ssh-agent`
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+ssh-add -l | grep "The agent has no identities" && ssh-add
+
 # Change prompt to be good
 # This combines Riley's cygwin-style with Joe's git helper
 #   github.com/selmanj/home
 #   github.com/rileykarson/config
-source ~/git-prompt.sh
+source ~/.git-prompt.sh
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWCOLORHINTS=1
