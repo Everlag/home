@@ -1,8 +1,11 @@
 [user]
-        email = boutette@google.com
 	name = Kyle Boutette
 [core]
-        editor = nano
+	editor = nano
 	pager = less --tabs=4 -RFX
 [alias]
 	diffc = diff --cached
+	s = status
+	l = log
+	d = diff
+	dc = diff --cached
