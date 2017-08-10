@@ -52,7 +52,7 @@ fi
 # This combines Riley's cygwin-style with Joe's git helper
 #   github.com/selmanj/home
 #   github.com/rileykarson/config
-source ~/.git-prompt.sh
+source ~/.git-prompt
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWCOLORHINTS=1
