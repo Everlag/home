@@ -1,3 +1,6 @@
+# Set our current user's dotfiles to be symlinked
+# into files managed by this repo.
 ln -s `pwd`/bashrc ~/.bashrc
 ln -s `pwd`/profile ~/.profile
 ln -s `pwd`/git-prompt ~/.git-prompt
+ln -s `pwd`/gitconfig ~/.gitconfig
