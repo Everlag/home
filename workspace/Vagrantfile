@@ -1,0 +1,52 @@
+# encoding: utf-8
+# -*- mode: ruby -*-
+
+# bootstrapped from
+#https://medium.com/@JohnFoderaro/how-to-set-up-a-local-linux-environment-with-vagrant-163f0ba4da77
+
+# Box / OS
+VAGRANT_BOX = 'ubuntu/trusty64'
+
+# Memorable name for your
+VM_NAME = 'development'
+# VM User — 'vagrant' by default
+VM_USER = 'vagrant'
+
+# # VM Port — uncomment this to use NAT instead of DHCP
+VM_PORT = 8080
+
+Vagrant.configure(2) do |config|
+  # Vagrant box from Hashicorp
+  config.vm.box = VAGRANT_BOX
+
+  # Actual machine name
+  config.vm.hostname = VM_NAME
+  # Set VM name in Virtualbox
+  config.vm.provider "virtualbox" do |v|
+    v.name = VM_NAME
+    v.memory = 4096
+    v.cpus = 3
+  end
+
+  #DHCP — comment this out if planning on using NAT instead
+ # config.vm.network "private_network", type: "dhcp"
+  # # Port forwarding — uncomment this to use NAT instead of DHCP
+  config.vm.network "forwarded_port", guest: 80, host: VM_PORT
+
+  # Disable default Vagrant folder, use a unique path per project
+  config.vm.synced_folder '.', '/home/'+VM_USER+'', disabled: true
+
+  # Allow xforwarding
+  config.ssh.forward_x11 = true
+
+  # Setup our vagrant user to include everything we care about
+  config.vm.provision "shell", path: "provision.sh"
+
+  # Copy in our keypair
+  config.vm.provision "file",
+    source: "~/.ssh/id_ed25519",
+    destination: "/home/vagrant/.ssh/id_ed25519"
+  config.vm.provision "file",
+    source: "~/.ssh/id_ed25519.pub",
+    destination: "/home/vagrant/.ssh/id_ed25519.pub"
+end
