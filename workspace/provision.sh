@@ -2,15 +2,26 @@
 
 set -e
 
+# Secure our ssh keys which were copied in before this
+ find /home/vagrant/.ssh/ -type f -name "id_*" ! -name "*.pub" \
+ | xargs chmod 400
+
 # Dependencies
 # - git (newer version)
 # - p7zip-full
 # - node + npm
 # - libgtk2.0-0 | libxss1 (for VS:Code)
+# - i3 (Window manager) + i3status
+# - rxvt-unicode (Terminal)
+# - xinit (starting X)
+# - xrdb (rxvt configuration)
+# - mingetty (automatic login)
 add-apt-repository -y ppa:git-core/ppa
 apt-get update
 apt-get upgrade -y
-apt-get install -y git p7zip-full libgtk2.0-0 libxss1
+apt-get install -y git p7zip-full libgtk2.0-0 libxss1 xinit
+apt-get install --no-install-recommends -y i3 i3status mingetty
+apt-get install -y rxvt-unicode x11-xserver-utils
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 apt-get install -y nodejs
 apt-get install -y build-essential
@@ -26,6 +37,29 @@ wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz \
     -O ${GO_TAR} --quiet
 tar -C /usr/local -xzf ${GO_TAR}
 rm ${GO_TAR}
+
+# Install more recent nano
+#
+# We compile from source as that's easiest
+NANO_TAR=nano.tar.gz
+wget https://www.nano-editor.org/dist/v2.8/nano-2.8.0.tar.gz \
+    -O ${NANO_TAR} --quiet
+tar -xzf ${NANO_TAR}
+pushd nano-*
+    # Specific build dependencies
+    apt-get install -y libncurses5-dev libncursesw5-dev texinfo
+    ./configure \
+        --enable-utf8 --enable-color --enable-extra --enable-multibuffer
+    make
+    apt-get remove -y nano
+    make install
+
+    # Copy over our syntax files
+    mkdir -p /usr/share/nano
+    cp syntax/*.nanorc /usr/share/nano/
+popd
+rm -r nano-*
+rm ${NANO_TAR}
 
 # Remove default MOTD apart from knowing when we need to reboot
 find /etc/update-motd.d ! -name '98-reboot-required' -type f -exec rm -f {} \;

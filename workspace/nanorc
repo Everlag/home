@@ -1,0 +1,2 @@
+# Include our syntax highlighting
+include "/usr/share/nano/*.nanorc"

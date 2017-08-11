@@ -1,0 +1,41 @@
+URxvt.font: xft:mononoki:bold:size=12
+
+! colors sourced from
+! http://www.rosipov.com/blog/mintty-color-scheme-cygwin/
+
+URxvt.foreground: #838a96
+URxvt.background: #000000
+
+! black
+URxvt.color0: #073642
+URxvt.color8: #002b36
+
+! red
+URxvt.color1: #dc322f
+URxvt.color9: #cb4b16
+
+! green
+URxvt.color2: #00c884
+URxvt.color10: #00c884
+
+! yellow
+URxvt.color3: #cccc66
+URxvt.color11: #cccc66
+
+! blue
+URxvt.color4: #6699cc
+URxvt.color12: #6699cc
+
+! magents
+URxvt.color5: #d33682
+URxvt.color13: #6c71c4
+
+! cyan
+URxvt.color6: #2aa198
+URxvt.color14: #93a1a1
+
+! white
+URxvt.color7: #eee8d5
+URxvt.color15: #fdf6e3
+
+URxvt.cursorcolour: #dc322f

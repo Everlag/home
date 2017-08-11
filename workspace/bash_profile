@@ -1,0 +1,23 @@
+#!/bin/bash
+# ~/.bash_profile: executed by bash(1) for login shells.
+
+# include .profile if it exists
+if [ -f "${HOME}/.profile" ] && [ -r "${HOME}/.profile" ]; then
+    source "${HOME}/.profile"
+fi
+
+# if we're not root and we're logged in on tty8, we assume a rungetty autologin and start xorg
+if [ ! -z "${UID:-}" ] && [ "$UID" != "0" ] && \
+   [ -z "${DISPLAY}" ] && [ ! -z "${SHLVL:-}" ] && \
+   [ "$SHLVL" == "1" ]; then
+    if [ "$(tty)" == "/dev/tty8" ]; then
+        trap "chvt 1; logout" INT TERM EXIT
+        chvt 8
+        while true; do
+            echo "starting xorg"
+            startx
+            echo "sleeping 2 seconds"
+            sleep 2
+        done
+    fi
+fi

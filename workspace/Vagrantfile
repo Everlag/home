@@ -26,10 +26,16 @@ Vagrant.configure(2) do |config|
     v.name = VM_NAME
     v.memory = 4096
     v.cpus = 3
+    v.gui = true
+
+    # Small, necessary tweak to get windowing to work
+    v.customize ["modifyvm", :id, "--vram", "256"]
+    v.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
   end
 
   #DHCP — comment this out if planning on using NAT instead
- # config.vm.network "private_network", type: "dhcp"
+  # config.vm.network "private_network", type: "dhcp"
   # # Port forwarding — uncomment this to use NAT instead of DHCP
   config.vm.network "forwarded_port", guest: 80, host: VM_PORT
 
@@ -39,9 +45,6 @@ Vagrant.configure(2) do |config|
   # Allow xforwarding
   config.ssh.forward_x11 = true
 
-  # Setup our vagrant user to include everything we care about
-  config.vm.provision "shell", path: "provision.sh"
-
   # Copy in our keypair
   config.vm.provision "file",
     source: "~/.ssh/id_ed25519",
@@ -49,4 +52,58 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file",
     source: "~/.ssh/id_ed25519.pub",
     destination: "/home/vagrant/.ssh/id_ed25519.pub"
+
+  # Setup our vagrant user to include everything we care about
+  config.vm.provision "shell", path: "provision.sh"
+
+  # Include i3 configuration
+  config.vm.provision "file",
+    source: "i3-config",
+    destination: "/home/vagrant/.i3/config"
+
+  # Include Xdefaults for styling
+  config.vm.provision "file",
+    source: "xDefaults",
+    destination: "/home/vagrant/.Xdefaults"
+
+  # Include nanorc
+  config.vm.provision "file",
+    source: "nanorc",
+    destination: "/home/vagrant/.nanorc"
+
+  # Include xinitrc
+  config.vm.provision "file",
+    source: "xinitrc",
+    destination: "/home/vagrant/.xinitrc"
+
+  # Include mononoki as an available font
+  config.vm.provision "file",
+    source: "mononoki-Regular.ttf",
+    destination: "/home/vagrant/.fonts/mononoki-Regular.ttf"
+  config.vm.provision "shell", inline: <<-SHELL
+    fc-cache -fv
+  SHELL
+
+  # Include bash_profile
+  # 
+  # This automatically logs in tty8
+  config.vm.provision "file",
+    source: "bash_profile",
+    destination: "/home/vagrant/.bash_profile"
+
+  # Include tty8
+  # 
+  # This allows bootstrapping from tty8 to i3
+  # Copy over then move to correct location as root
+  config.vm.provision "file",
+    source: "tty8.conf",
+    destination: "/home/vagrant/tty8.conf"
+  config.vm.provision "shell", inline: <<-SHELL
+    mv /home/vagrant/tty8.conf /etc/init/tty8.conf
+  SHELL
+
+  # Reboot straight into i3
+  config.vm.provision "shell", inline: <<-SHELL
+    reboot
+  SHELL
 end
