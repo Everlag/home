@@ -3,10 +3,11 @@
 set -e
 
 # Dependencies
-# - git
+# - git (newer version)
 # - p7zip-full
 # - node + npm
 # - libgtk2.0-0 | libxss1 (for VS:Code)
+add-apt-repository -y ppa:git-core/ppa
 apt-get update
 apt-get upgrade -y
 apt-get install -y git p7zip-full libgtk2.0-0 libxss1
@@ -41,24 +42,42 @@ rm ${CODE_DEB}
 
 # Create a script we'll run as our non-privileged user
 bootstrapper=/home/vagrant/bootstrap.sh
+
+# Declare our variables here to be filled in below
+export GOPATH=/home/vagrant/gopath
+export GOTO_SCRIPT=${GOPATH}/goto.sh
 cat > ${bootstrapper} <<EOL
+#!/bin/bash
 set -e
 
 # Fetch our configuration
 git clone https://github.com/everlag/home /home/vagrant/home
 
 # Setup our shell
-pushd /home/vagrant && \
-rm ~/.bashrc && \
-rm ~/.profile && \
+pushd /home/vagrant
+    rm ~/.bashrc
+    rm ~/.profile
 
-cd home && ./link
+    pushd home
+        ./link
+    popd
+
+    # Include GOPATH specific to this VM
+    echo "export GOPATH=${GOPATH}" >> /home/vagrant/.profile
 popd
 
 # Temporary directory for garbage
 mkdir /home/vagrant/trash
 # GOPATH
-mkdir /home/vagrant/gopath
+mkdir -p ${GOPATH}/src/github.com/Everlag
+cat > ${GOTO_SCRIPT} <<EOF
+#!/bin/bash
+# Moves CWD to the usual root
+# usage: . goto.sh
+pushd src/github.com/Everlag
+EOF
+chmod +x ${GOTO_SCRIPT}
+
 EOL
 chmod +x ${bootstrapper}
 
