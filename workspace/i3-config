@@ -99,6 +99,13 @@ bindsym $mod+0 workspace 10
 bindsym $mod+Mod1+Left workspace prev
 bindsym $mod+Mod1+Right workspace next
 
+# alt-tab functionality
+# The muscle memory is strong for switching between
+# two windows, why fight it?
+# Mod1 is alt, so these are $mod+Alt(+Shift)
+bindsym Mod1+Tab focus right
+bindsym Mod1+Shift+Tab focus left
+
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
 bindsym $mod+Shift+2 move container to workspace 2
@@ -151,4 +158,4 @@ bar {
 }
 
 # Start these up to fill in our applications
-exec --no-startup-id ~/.i3/startup.sh
+exec --no-startup-id ~/.i3/i3-startup.sh

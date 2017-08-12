@@ -66,6 +66,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file",
     source: "i3-startup.sh",
     destination: "/home/vagrant/.i3/i3-startup.sh"
+  config.vm.provision "shell", inline: <<-SHELL
+    chmod +x /home/vagrant/.i3/i3-startup.sh
+  SHELL
   config.vm.provision "file",
     source: "workspace-1.json",
     destination: "/home/vagrant/.i3/workspace-1.json"
