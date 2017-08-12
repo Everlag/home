@@ -1,0 +1,17 @@
+// Place your settings in this file to overwrite the default settings
+{
+    "editor.fontFamily": "mononoki",
+    "[markdown]": {
+        "editor.wrappingColumn": 0
+    },
+    "[plaintext]": {
+        "editor.wrappingColumn": 0
+    },
+    "editor.minimap.enabled": true,
+    "workbench.colorTheme": "Solarized Dark",
+    "window.reopenFolders": "all",
+    "editor.rulers": [
+        80
+    ],
+    "files.eol": "\n"
+}

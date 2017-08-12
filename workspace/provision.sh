@@ -81,8 +81,11 @@ find /etc/update-motd.d ! -name '98-reboot-required' -type f -exec rm -f {} \;
 find /etc/update-motd.d  -type l -delete
 
 # Install vs code
+# 
+# This is an older version where --install-extension is known to work
 CODE_DEB=vscode.deb
-wget https://go.microsoft.com/fwlink/?LinkID=760868 -O ${CODE_DEB} --quiet
+wget https://vscode-update.azurewebsites.net/1.6.1/linux-deb-x64/stable \
+    -O ${CODE_DEB} --quiet
 set +e
     dpkg -i ${CODE_DEB}
 set -e

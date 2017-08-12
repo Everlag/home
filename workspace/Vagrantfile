@@ -54,6 +54,9 @@ Vagrant.configure(2) do |config|
     destination: "/home/vagrant/.ssh/id_ed25519.pub"
 
   # Setup our vagrant user to include everything we care about
+  # 
+  # NOTE: everything following this can rely on build
+  # dependencies to exist
   config.vm.provision "shell", path: "provision.sh"
 
   # Include i3 configuration
@@ -79,7 +82,6 @@ Vagrant.configure(2) do |config|
     source: "workspace-3.json",
     destination: "/home/vagrant/.i3/workspace-3.json"
 
-
   # Include Xdefaults for styling
   config.vm.provision "file",
     source: "xDefaults",
@@ -94,6 +96,28 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file",
     source: "xinitrc",
     destination: "/home/vagrant/.xinitrc"
+
+  # Include vs code settings
+  # and configure extensions
+  config.vm.provision "file",
+    source: "vscode_settings.json",
+    destination: "/home/vagrant/.config/Code/User/settings.json"
+  config.vm.provision "shell", inline: <<-SHELL
+    extensions=(
+      lukehoban.Go
+      mohsen1.prettify-json
+      naumovs.color-highlight
+    )
+    for i in "${extensions}"; do
+      su -c "code --install-extension $i" vagrant
+    done
+
+    # Upgrade to newest version
+    # 
+    # provision.sh will install an old version so we can use
+    # --install-extension
+    apt-get upgrade -y
+  SHELL
 
   # Include mononoki as an available font
   config.vm.provision "file",

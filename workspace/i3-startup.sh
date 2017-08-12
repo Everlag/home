@@ -19,7 +19,7 @@ for i in $(seq 1 $count); do
 done
 
 # Chrome
-nohup chromium-browser &
+nohup chromium-browser --disable-smooth-scrolling &
 
 # Code
 nohup code &
