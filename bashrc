@@ -52,8 +52,29 @@ fi
 # This combines Riley's cygwin-style with Joe's git helper
 #   github.com/selmanj/home
 #   github.com/rileykarson/config
+# We also shorten portions of gopath to prevent wrapping
 source ~/.git-prompt
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWCOLORHINTS=1
-PS1='\[\e]0;|\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]$(__git_ps1 " (%s)")\n\$ '
+
+# We need to handle the case of a GOPATH not existing
+function _shorten_path() {
+  local base=$(dirs +0)
+
+  local REL_GOPATH=$(echo $GOPATH | sed "s|$HOME|~|g")
+  if [ -z "$REL_GOPATH" ]; then
+    echo -n ${base}
+    return 0
+  fi
+
+  echo -n $(echo ${base} | \
+    sed "s|${REL_GOPATH}|gopath|g" | \
+    sed "s|src/github.com|github|g")
+}
+
+function _shorten_user_host() {
+  echo -n ${USER}@${HOSTNAME} | sed "s|vagrant@development|vagrant@Δ|g"
+}
+
+PS1='\[\e]0;|\w\a\]\n\[\e[32m\]$(_shorten_user_host) \[\e[33m\]$(_shorten_path)\[\e[0m\]$(__git_ps1 " (%s)")\n\$ '
