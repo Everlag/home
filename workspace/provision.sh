@@ -111,8 +111,9 @@ pushd /home/vagrant
         ./link
     popd
 
-    # Include GOPATH specific to this VM
+    # Include GOPATH specific to this VM and GOBIN in PATH
     echo "export GOPATH=${GOPATH}" >> /home/vagrant/.profile
+    echo "export PATH=$PATH:$GOPATH/bin" >> /home/vagrant/.profile
 popd
 
 # Temporary directory for garbage
@@ -123,7 +124,7 @@ cat > ${GOTO_SCRIPT} <<EOF
 #!/bin/bash
 # Moves CWD to the usual root
 # usage: . goto.sh
-pushd src/github.com/Everlag
+pushd /home/vagrant/gopath/src/github.com/Everlag
 EOF
 chmod +x ${GOTO_SCRIPT}
 
