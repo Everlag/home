@@ -1,2 +1,5 @@
+# Prevent wrapping from breaking things
+set nowrap
+
 # Include our syntax highlighting
 include "/usr/share/nano/*.nanorc"
