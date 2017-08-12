@@ -1,0 +1,40 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "normal",
+    "current_border_width": 2,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 1287,
+       "width": 2556,
+       "x": 2,
+       "y": 22
+    },
+    "name": "i3: Layout saving in i3 - Chromium",
+    "percent": 0.7,
+    "swallows": [
+       {
+       "class": "^Chromium\\-browser$"
+       }
+    ],
+    "type": "con"
+}
+
+{
+    "border": "normal",
+    "current_border_width": 2,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 460,
+       "width": 816,
+       "x": 0,
+       "y": 0
+    },
+    "name": "|~",
+    "percent": 0.3,
+    "swallows": [
+       {
+       "class": "^URxvt$"
+       }
+    ],
+    "type": "con"
+}
