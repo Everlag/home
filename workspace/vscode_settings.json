@@ -1,6 +1,7 @@
 // Place your settings in this file to overwrite the default settings
 {
     "editor.fontFamily": "mononoki",
+    "editor.fontSize": 15,
     "[markdown]": {
         "editor.wrappingColumn": 0
     },

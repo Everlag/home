@@ -19,6 +19,7 @@ set -e
 # - libanyevent-i3-perl (i3-save-tree)
 # - mingetty (automatic login)
 # - chromium-browser (chrome)
+# - gconf2 (code dependency unsatisfied for 1.6)
 
 # git
 add-apt-repository -y ppa:git-core/ppa
@@ -33,7 +34,7 @@ rm ${KEYRING_DEB}
 # Actual installation
 apt-get update
 apt-get upgrade -y
-apt-get install -y git p7zip-full libgtk2.0-0 libxss1 xinit
+apt-get install -y git p7zip-full libgtk2.0-0 libxss1 xinit gconf2
 apt-get install --no-install-recommends -y i3 i3status mingetty
 apt-get install -y rxvt-unicode x11-xserver-utils \
                     chromium-browser suckless-tools
@@ -83,8 +84,10 @@ find /etc/update-motd.d  -type l -delete
 # Install vs code
 # 
 # This is an older version where --install-extension is known to work
+# However, this version is very specific as it is the first which will
+# set up an apt repository for us to update from.
 CODE_DEB=vscode.deb
-wget https://vscode-update.azurewebsites.net/1.6.1/linux-deb-x64/stable \
+wget https://vscode-update.azurewebsites.net/1.10.2/linux-deb-x64/stable \
     -O ${CODE_DEB} --quiet
 set +e
     dpkg -i ${CODE_DEB}

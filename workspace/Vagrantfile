@@ -108,7 +108,7 @@ Vagrant.configure(2) do |config|
       mohsen1.prettify-json
       naumovs.color-highlight
     )
-    for i in "${extensions}"; do
+    for i in "${extensions[@]}"; do
       su -c "code --install-extension $i" vagrant
     done
 
@@ -116,7 +116,8 @@ Vagrant.configure(2) do |config|
     # 
     # provision.sh will install an old version so we can use
     # --install-extension
-    apt-get upgrade -y
+    apt-get update
+    apt-get dist-upgrade -y
   SHELL
 
   # Include mononoki as an available font
