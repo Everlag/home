@@ -39,3 +39,8 @@ URxvt.color7: #eee8d5
 URxvt.color15: #fdf6e3
 
 URxvt.cursorcolour: #dc322f
+
+! clickable urls
+URxvt.perl-ext-common: default,matcher
+URxvt.url-launcher: /usr/bin/xdg-open
+URxvt.matcher.button: 1
