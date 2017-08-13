@@ -118,14 +118,15 @@ pushd /home/vagrant
     popd
 
     # Include GOPATH specific to this VM and GOBIN in PATH
+    # NOTE: this should be the only unescaped replacement present here.
     echo "export GOPATH=${GOPATH}" >> /home/vagrant/.profile
-    echo "export PATH=$PATH:$GOPATH/bin" >> /home/vagrant/.profile
+    echo "export PATH=\$PATH:\$GOPATH/bin" >> /home/vagrant/.profile
     cat <<EOT >> /home/vagrant/.profile
 # A second time as GOPATH is now defined
-if [ -n "$BASH_VERSION" ]; then
+if [ -n "\$BASH_VERSION" ]; then
     # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
+    if [ -f "\$HOME/.bashrc" ]; then
+        . "\$HOME/.bashrc"
     fi
 fi
 EOT
