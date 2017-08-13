@@ -102,6 +102,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file",
     source: "vscode_settings.json",
     destination: "/home/vagrant/.config/Code/User/settings.json"
+  config.vm.provision "file",
+    source: "vscode_keybindings.json",
+    destination: "/home/vagrant/.config/Code/User/keybindings.json"
   config.vm.provision "shell", inline: <<-SHELL
     extensions=(
       lukehoban.Go
