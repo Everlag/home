@@ -110,6 +110,7 @@ Vagrant.configure(2) do |config|
       lukehoban.Go
       mohsen1.prettify-json
       naumovs.color-highlight
+      eg2.tslint
     )
     for i in "${extensions[@]}"; do
       su -c "code --install-extension $i" vagrant
