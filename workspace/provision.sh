@@ -121,6 +121,7 @@ pushd /home/vagrant
     # NOTE: this should be the only unescaped replacement present here.
     echo "export GOPATH=${GOPATH}" >> /home/vagrant/.profile
     echo "export PATH=\$PATH:\$GOPATH/bin" >> /home/vagrant/.profile
+    echo "export PATH=\$PATH:/usr/local/go/bin" >> /home/vagrant/.profile
     cat <<EOT >> /home/vagrant/.profile
 # A second time as GOPATH is now defined
 if [ -n "\$BASH_VERSION" ]; then
