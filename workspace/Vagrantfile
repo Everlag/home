@@ -132,6 +132,11 @@ Vagrant.configure(2) do |config|
     source: "watch-git_status.sh",
     destination: "/home/vagrant/gopath/watch-git_status.sh"
 
+  # Include ssh helper
+  config.vm.provision "file",
+    source: "ssh-agent.sh",
+    destination: "/home/vagrant/ssh-agent.sh
+
   # Include mononoki as an available font
   config.vm.provision "file",
     source: "mononoki-Regular.ttf",
