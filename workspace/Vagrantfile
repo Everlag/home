@@ -135,7 +135,7 @@ Vagrant.configure(2) do |config|
   # Include ssh helper
   config.vm.provision "file",
     source: "ssh-agent.sh",
-    destination: "/home/vagrant/ssh-agent.sh
+    destination: "/home/vagrant/ssh-agent.sh"
 
   # Include mononoki as an available font
   config.vm.provision "file",
