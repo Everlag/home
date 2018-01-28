@@ -21,4 +21,9 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
+# Needed for node global imports
+# Lets source-map-support module get installed globally.
+#export NODE_PATH="$(npm root --global)"
+export NODE_PATH=/usr/local/lib/node_modules
+
 export PATH=$PATH:/usr/local/go/bin
