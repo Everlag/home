@@ -5,7 +5,7 @@
 #https://medium.com/@JohnFoderaro/how-to-set-up-a-local-linux-environment-with-vagrant-163f0ba4da77
 
 # Box / OS
-VAGRANT_BOX = 'ubuntu/trusty64'
+VAGRANT_BOX = 'ubuntu/bionic64'
 
 # Memorable name for your
 VM_NAME = 'development-TESTING'
@@ -114,7 +114,7 @@ Vagrant.configure(2) do |config|
     destination: "/home/vagrant/.config/Code/User/keybindings.json"
   config.vm.provision "shell", inline: <<-SHELL
     extensions=(
-      lukehoban.Go
+      ms-vscode.Go
       mohsen1.prettify-json
       naumovs.color-highlight
       eg2.tslint
