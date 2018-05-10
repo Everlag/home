@@ -8,7 +8,7 @@
 VAGRANT_BOX = 'ubuntu/trusty64'
 
 # Memorable name for your
-VM_NAME = 'development'
+VM_NAME = 'development-TESTING'
 # VM User — 'vagrant' by default
 VM_USER = 'vagrant'
 
@@ -21,6 +21,10 @@ Vagrant.configure(2) do |config|
 
   # Actual machine name
   config.vm.hostname = VM_NAME
+
+  # Allow multiple instances of this VM by changing VM_NAME
+  config.vm.define VM_NAME
+
   # Set VM name in Virtualbox
   config.vm.provider "virtualbox" do |v|
     v.name = VM_NAME
@@ -32,6 +36,12 @@ Vagrant.configure(2) do |config|
     v.customize ["modifyvm", :id, "--vram", "256"]
     v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+  end
+
+  if defined? ansible
+    # Handle potential issue with ansible install in ubuntu 18.04
+    # https://github.com/hashicorp/vagrant/issues/9796
+    ansible.install_mode = "pip"
   end
 
   #DHCP — comment this out if planning on using NAT instead
