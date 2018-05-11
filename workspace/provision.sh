@@ -44,7 +44,7 @@ apt-get install -y rxvt-unicode x11-xserver-utils \
                     chromium-browser suckless-tools
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 apt-get install -y nodejs npm # npm now installed seperately from nodejs
-apt-get install -y build-essential
+apt-get install -y build-essential dkms
 npm install -g npm
 apt-get update
 apt-get upgrade -y

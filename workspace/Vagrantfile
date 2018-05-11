@@ -8,7 +8,7 @@
 VAGRANT_BOX = 'ubuntu/bionic64'
 
 # Memorable name for your
-VM_NAME = 'development-TESTING'
+VM_NAME = 'development'
 # VM User — 'vagrant' by default
 VM_USER = 'vagrant'
 
@@ -37,6 +37,9 @@ Vagrant.configure(2) do |config|
     v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
   end
+
+  # Disallow guest additions as a middleware, require an explicit command.
+  config.vbguest.auto_update = false
 
   if defined? ansible
     # Handle potential issue with ansible install in ubuntu 18.04
@@ -143,6 +146,10 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file",
     source: "ssh-agent.sh",
     destination: "/home/vagrant/ssh-agent.sh"
+  # Include virtualbox services helper
+  config.vm.provision "file",
+    source: "vbox-services.sh",
+    destination: "/home/vagrant/vbox-services.sh"
 
   # Include mononoki as an available font
   config.vm.provision "file",
@@ -159,15 +166,18 @@ Vagrant.configure(2) do |config|
     source: "bash_profile",
     destination: "/home/vagrant/.bash_profile"
 
-  # Include tty8
+  # Include getty@tty1.conf for systemd autostart
   # 
-  # This allows bootstrapping from tty8 to i3
-  # Copy over then move to correct location as root
+  # This allows bootstrapping from tty1 to i3.
+  # 
+  # Note: a cat foo | systemctl edit getty@tty1 does not work
   config.vm.provision "file",
-    source: "tty8.conf",
-    destination: "/home/vagrant/tty8.conf"
+    source: "getty@tty1.conf",
+    destination: "/home/vagrant/getty@tty1.conf"
   config.vm.provision "shell", inline: <<-SHELL
-    mv /home/vagrant/tty8.conf /etc/init/tty8.conf
+    mkdir -p /etc/systemd/system/getty@tty1.service.d && \
+    mv getty@tty1.conf \
+      /etc/systemd/system/getty@tty1.service.d/override.conf
   SHELL
 
   # Reboot straight into i3
