@@ -5,7 +5,7 @@
 #https://medium.com/@JohnFoderaro/how-to-set-up-a-local-linux-environment-with-vagrant-163f0ba4da77
 
 # Box / OS
-VAGRANT_BOX = 'ubuntu/trusty64'
+VAGRANT_BOX = 'ubuntu/bionic64'
 
 # Memorable name for your
 VM_NAME = 'development'
@@ -21,6 +21,10 @@ Vagrant.configure(2) do |config|
 
   # Actual machine name
   config.vm.hostname = VM_NAME
+
+  # Allow multiple instances of this VM by changing VM_NAME
+  config.vm.define VM_NAME
+
   # Set VM name in Virtualbox
   config.vm.provider "virtualbox" do |v|
     v.name = VM_NAME
@@ -32,6 +36,15 @@ Vagrant.configure(2) do |config|
     v.customize ["modifyvm", :id, "--vram", "256"]
     v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+  end
+
+  # Disallow guest additions as a middleware, require an explicit command.
+  config.vbguest.auto_update = false
+
+  if defined? ansible
+    # Handle potential issue with ansible install in ubuntu 18.04
+    # https://github.com/hashicorp/vagrant/issues/9796
+    ansible.install_mode = "pip"
   end
 
   #DHCP — comment this out if planning on using NAT instead
@@ -104,10 +117,11 @@ Vagrant.configure(2) do |config|
     destination: "/home/vagrant/.config/Code/User/keybindings.json"
   config.vm.provision "shell", inline: <<-SHELL
     extensions=(
-      lukehoban.Go
+      ms-vscode.Go
       mohsen1.prettify-json
       naumovs.color-highlight
       eg2.tslint
+      rust-lang.rust
     )
     for i in "${extensions[@]}"; do
       su -c "code --install-extension $i" vagrant
@@ -133,6 +147,10 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file",
     source: "ssh-agent.sh",
     destination: "/home/vagrant/ssh-agent.sh"
+  # Include virtualbox services helper
+  config.vm.provision "file",
+    source: "vbox-services.sh",
+    destination: "/home/vagrant/vbox-services.sh"
 
   # Include mononoki as an available font
   config.vm.provision "file",
@@ -149,15 +167,18 @@ Vagrant.configure(2) do |config|
     source: "bash_profile",
     destination: "/home/vagrant/.bash_profile"
 
-  # Include tty8
+  # Include getty@tty1.conf for systemd autostart
   # 
-  # This allows bootstrapping from tty8 to i3
-  # Copy over then move to correct location as root
+  # This allows bootstrapping from tty1 to i3.
+  # 
+  # Note: a cat foo | systemctl edit getty@tty1 does not work
   config.vm.provision "file",
-    source: "tty8.conf",
-    destination: "/home/vagrant/tty8.conf"
+    source: "getty@tty1.conf",
+    destination: "/home/vagrant/getty@tty1.conf"
   config.vm.provision "shell", inline: <<-SHELL
-    mv /home/vagrant/tty8.conf /etc/init/tty8.conf
+    mkdir -p /etc/systemd/system/getty@tty1.service.d && \
+    mv getty@tty1.conf \
+      /etc/systemd/system/getty@tty1.service.d/override.conf
   SHELL
 
   # Reboot straight into i3

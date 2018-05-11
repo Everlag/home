@@ -25,8 +25,12 @@ set -e
 add-apt-repository -y ppa:git-core/ppa
 
 # i3
+# 
+# NOTE: If keyring installation fails with 404,
+# goto http://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/ and update
+# the keyring file below and associated sha256
 KEYRING_DEB=./keyring.deb
-/usr/lib/apt/apt-helper download-file http://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2017.01.02_all.deb ${KEYRING_DEB} SHA256:4c3c6685b1181d83efe3a479c5ae38a2a44e23add55e16a328b8c8560bf05e5f
+/usr/lib/apt/apt-helper download-file http://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2018.01.30_all.deb ${KEYRING_DEB} SHA256:baa43dbbd7232ea2b5444cae238d53bebb9d34601cc000e82f11111b1889078a
 dpkg -i ./${KEYRING_DEB}
 echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" >> /etc/apt/sources.list.d/sur5r-i3.list
 rm ${KEYRING_DEB}
@@ -39,20 +43,25 @@ apt-get install --no-install-recommends -y i3 i3status mingetty
 apt-get install -y rxvt-unicode x11-xserver-utils \
                     chromium-browser suckless-tools
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-apt-get install -y nodejs
-apt-get install -y build-essential
+apt-get install -y nodejs npm # npm now installed seperately from nodejs
+apt-get install -y build-essential dkms
 npm install -g npm
 apt-get update
 apt-get upgrade -y
 apt-get autoremove -y
 
 # Install go
-GO_VERSION=1.8.3
+GO_VERSION=1.10.2
 GO_TAR=go.tar.gz
 wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz \
     -O ${GO_TAR} --quiet
 tar -C /usr/local -xzf ${GO_TAR}
 rm ${GO_TAR}
+
+# Install rust
+# 
+# This will modify our path
+curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly
 
 # Install more recent nano
 #
