@@ -58,11 +58,6 @@ wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz \
 tar -C /usr/local -xzf ${GO_TAR}
 rm ${GO_TAR}
 
-# Install rust
-# 
-# This will modify our path
-curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly
-
 # Install more recent nano
 #
 # We compile from source as that's easiest
