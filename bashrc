@@ -27,6 +27,7 @@ alias ls='ls -CF'
 # Better pager
 alias less='less -RFX'
 
+alias dc='docker-compose'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
