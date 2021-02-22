@@ -1,5 +1,5 @@
 ! If everything is too big or small, tweak this
-!Xft.dpi: 130
+Xft.dpi: 95
 
 URxvt.font: xft:mononoki:bold:size=12
 

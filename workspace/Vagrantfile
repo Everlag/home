@@ -8,12 +8,14 @@
 VAGRANT_BOX = 'ubuntu/bionic64'
 
 # Memorable name for your
-VM_NAME = 'development'
+VM_NAME = 'dev2'
 # VM User — 'vagrant' by default
 VM_USER = 'vagrant'
 
 # # VM Port — uncomment this to use NAT instead of DHCP
 VM_PORT = 8080
+
+VAGRANT_EXPERIMENTAL="disks"
 
 Vagrant.configure(2) do |config|
   # Vagrant box from Hashicorp
@@ -22,23 +24,28 @@ Vagrant.configure(2) do |config|
   # Actual machine name
   config.vm.hostname = VM_NAME
 
+  config.vm.disk :disk, size: "25GB", primary: true
+
   # Allow multiple instances of this VM by changing VM_NAME
   config.vm.define VM_NAME
 
   # Set VM name in Virtualbox
   config.vm.provider "virtualbox" do |v|
     v.name = VM_NAME
-    v.memory = 6144
-    v.cpus = 3
+    v.memory = 8192
+    v.cpus = 4
     v.gui = true
 
     # Small, necessary tweak to get windowing to work
     v.customize ["modifyvm", :id, "--vram", "256"]
     v.customize ["modifyvm", :id, "--accelerate3d", "on"]
-    v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
   end
 
   # Disallow guest additions as a middleware, require an explicit command.
+  # 
+  # If this fails,
+  # vagrant plugin install vagrant-vbguest
   config.vbguest.auto_update = false
 
   if defined? ansible
@@ -50,7 +57,7 @@ Vagrant.configure(2) do |config|
   #DHCP — comment this out if planning on using NAT instead
   # config.vm.network "private_network", type: "dhcp"
   # # Port forwarding — uncomment this to use NAT instead of DHCP
-  config.vm.network "forwarded_port", guest: 80, host: VM_PORT
+  # config.vm.network "forwarded_port", guest: 80, host: VM_PORT
 
   # Disable default Vagrant folder, use a unique path per project
   config.vm.synced_folder '.', '/home/'+VM_USER+'', disabled: true
@@ -62,6 +69,14 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file",
     source: "~/.ssh/id_ed25519",
     destination: "/home/vagrant/.ssh/id_ed25519"
+
+  # Install libssl for Ansible (to work around https://bugs.launchpad.net/ubuntu/+source/openssl/+bug/1832919)
+  # https://github.com/hashicorp/vagrant/issues/10914
+  config.vm.provision "shell",
+  inline: "sudo apt-get update -y -qq && "\
+    "sudo dpkg-reconfigure libc6 && "\
+    "export DEBIAN_FRONTEND=noninteractive && "\
+    "sudo -E apt-get -q --option \"Dpkg::Options::=--force-confold\" --assume-yes install libssl1.1"
 
   # Setup our vagrant user to include everything we care about
   # 

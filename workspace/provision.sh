@@ -10,6 +10,7 @@ set -e
 # - git (newer version)
 # - p7zip-full
 # - node + npm
+# - unzip
 # - libgtk2.0-0 | libxss1 (for VS:Code)
 # - i3 (Window manager) + i3status
 # - rxvt-unicode (Terminal)
@@ -30,7 +31,7 @@ add-apt-repository -y ppa:git-core/ppa
 # goto http://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/ and update
 # the keyring file below and associated sha256
 KEYRING_DEB=./keyring.deb
-/usr/lib/apt/apt-helper download-file http://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2018.01.30_all.deb ${KEYRING_DEB} SHA256:baa43dbbd7232ea2b5444cae238d53bebb9d34601cc000e82f11111b1889078a
+/usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2021.02.02_all.deb ${KEYRING_DEB} SHA256:cccfb1dd7d6b1b6a137bb96ea5b5eef18a0a4a6df1d6c0c37832025d2edaa710
 dpkg -i ./${KEYRING_DEB}
 echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" >> /etc/apt/sources.list.d/sur5r-i3.list
 rm ${KEYRING_DEB}
@@ -38,20 +39,21 @@ rm ${KEYRING_DEB}
 # Actual installation
 apt-get update
 apt-get upgrade -y
-apt-get install -y git p7zip-full libgtk2.0-0 libxss1 xinit gconf2
+apt-get install -y git p7zip-full libgtk2.0-0 libxss1 xinit gconf2 unzip
 apt-get install --no-install-recommends -y i3 i3status mingetty
 apt-get install -y rxvt-unicode x11-xserver-utils \
                     chromium-browser suckless-tools
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-apt-get install -y nodejs npm # npm now installed seperately from nodejs
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - # register node
+apt-get install -y nodejs # npm now alongside nodejs... this changes... bleh
 apt-get install -y build-essential dkms
-npm install -g npm
+# Previously, we installed npm and yarn here; npm likes to brick itself
+# when run as root so we're not gonna do that...
 apt-get update
 apt-get upgrade -y
 apt-get autoremove -y
 
 # Install go
-GO_VERSION=1.10.2
+GO_VERSION=1.16
 GO_TAR=go.tar.gz
 wget https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz \
     -O ${GO_TAR} --quiet
@@ -149,6 +151,14 @@ pushd /home/vagrant/gopath/src/github.com/Everlag
 EOF
 chmod +x ${GOTO_SCRIPT}
 
+# update npm and install yarn
+# 
+# We do so here rather than outside since we absolutely want to
+# be vagrant rather than root when this executes.
+# https://github.com/nodesource/distributions/issues/1027
+# sudo npm install -g npm yarn
+# 
+# I do not know how to update npm anymore :|
 EOL
 chmod +x ${bootstrapper}
 
