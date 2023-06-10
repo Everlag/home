@@ -1,3 +1,5 @@
+DEPRECATED: succeeded by the appropriately named [home2](https://github.com/Everlag/home2) which uses salt instead
+
 # home
 
 Top level directory is portable dotfiles.
